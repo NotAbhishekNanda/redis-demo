@@ -20,7 +20,6 @@ const addressSchema = mongoose.Schema({
 	}
 })
 
-//Creating the collection Address
-const Address = mongoose.model('Address', addressSchema)
+const Address = mongoose.model('Address', addressSchema);
 
 module.exports = Address;
