@@ -1,8 +1,69 @@
 const express = require('express');
 const router = express.Router();
 const Address = require('../model/models');
+const Number = require('../model/numbers');
 
+//Reading Numbers from number directory: 
+
+router.get('/numbers',(req,res)=>{
+    Number.find({})
+            .then((data)=>{
+                res.json({found: true, data: data});
+            })
+            .catch((err)=>{
+                console.log(err)
+                res.json({found: false, data: null});
+            })
+})
+
+router.get('/findNumber', async (req,res) => {
+	let searchField = req.query.number;
+	Number.find({number:{$regex: searchField, $options: '$i'}})
+	.then(data => {
+		let filteredData = data;
+		if(filteredData.length !== 0){
+			res.json(filteredData);
+		}
+			else{
+				res.json({Error:"Number not Found"});
+
+			
+		}
+	})
+})
+
+router.post('/number', (req, res) => {
+	number = req.body.number,
+	connectTimeInSec = req.body.connectTimeInSec,
+	isValid = req.body.isValid
+
+	let newAddress = new Number({
+		number: number,
+		connectTimeInSec: connectTimeInSec,
+		isValid: isValid
+	})
+
+	newAddress.save().then((numberDetails) => {
+		res.send(numberDetails)
+	}).catch((err) => {
+		console.log(err)
+	})
+})
+
+
+//--------------------------------------------------------------------------------------------------------------------
 // Reading a User from AddressBook
+
+router.get('/',(req,res)=>{
+    Address.find({})
+            .then((data)=>{
+                res.json({found: true, data: data});
+            })
+            .catch((err)=>{
+                console.log(err)
+                res.json({found: false, data: null});
+            })
+})
 
 router.get('/:id', (req, res) =>{
 	Address.findById(req.params.id, (err, user) =>{

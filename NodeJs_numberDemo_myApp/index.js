@@ -1,11 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const Address = require('./model/models')
 
 
 //Initialize express app
 const app = express();
+
+const redis = require('redis');//Configure redis client
+const redisClient = redis.createClient();
+redisClient.connect().then(() =>{
+    console.log('redis connected')
+})
+const DEFAULT_EXPIRATION = 3600;
 
 const adressRoute = require('./routes/address');
 
