@@ -40,6 +40,6 @@ app.get('/photos/:id', async (req,res) => {
     res.json(data)
 })
 
-app.listen(3000, ()=>{
+app.listen(5000, ()=>{
     console.log('Application started')
 });

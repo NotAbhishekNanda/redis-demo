@@ -3,17 +3,29 @@ const router = express.Router();
 const Address = require('../model/models');
 const Number = require('../model/numbers');
 
+const redisClient = require('../redisdb');
+
 //Reading Numbers from number directory: 
 
-router.get('/numbers',(req,res)=>{
+router.get('/numbers', async(req,res)=>{
+
+	const numberList = await redisClient.get('numbers');
+	if(numberList != null){
+		console.log('Cache Hit');
+		return res.json(JSON.parse(numberList))
+	}else
+	{
+	console.log('Cache Miss');
     Number.find({})
             .then((data)=>{
+				redisClient.SET('numbers', JSON.stringify(data));
                 res.json({found: true, data: data});
-            })
+			})
             .catch((err)=>{
                 console.log(err)
                 res.json({found: false, data: null});
             })
+		}
 })
 
 router.get('/findNumber', async (req,res) => {
@@ -33,9 +45,14 @@ router.get('/findNumber', async (req,res) => {
 })
 
 router.post('/number', (req, res) => {
-	number = req.body.number,
-	connectTimeInSec = req.body.connectTimeInSec,
-	isValid = req.body.isValid
+	// for (let i = 9999200000 ; i < 9999300000; i++){
+	// number = i.toString(),
+	// connectTimeInSec = i%10,
+	// isValid = true
+	number = req.body.number;
+	connectTimeInSec = req.body.connectTimeInSec;
+	isValid = req.body.isValid;
+
 
 	let newAddress = new Number({
 		number: number,
@@ -45,9 +62,12 @@ router.post('/number', (req, res) => {
 
 	newAddress.save().then((numberDetails) => {
 		res.send(numberDetails)
+		// console.log('saved',i);
 	}).catch((err) => {
 		console.log(err)
 	})
+// }
+// res.json({sent:'sent succesfully'})
 })
 
 
