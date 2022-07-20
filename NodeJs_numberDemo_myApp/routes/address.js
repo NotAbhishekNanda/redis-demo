@@ -45,10 +45,13 @@ router.get('/findNumber', async (req,res) => {
 })
 
 router.post('/number', (req, res) => {
-	for (let i = 9999200000 ; i < 9999300000; i++){
-	number = i.toString(),
-	connectTimeInSec = i%10,
-	isValid = true
+	// for (let i = 9999200000 ; i < 9999300000; i++){
+	// number = i.toString(),
+	// connectTimeInSec = i%10,
+	// isValid = true
+	number = req.body.number;
+	connectTimeInSec = req.body.connectTimeInSec;
+	isValid = req.body.isValid;
 
 
 	let newAddress = new Number({
@@ -58,13 +61,13 @@ router.post('/number', (req, res) => {
 	})
 
 	newAddress.save().then((numberDetails) => {
-		// res.send(numberDetails)
-		console.log('saved',i);
+		res.send(numberDetails)
+		// console.log('saved',i);
 	}).catch((err) => {
 		console.log(err)
 	})
-}
-res.json({sent:'sent succesfully'})
+// }
+// res.json({sent:'sent succesfully'})
 })
 
 

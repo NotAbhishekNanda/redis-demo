@@ -6,8 +6,6 @@ const bodyParser = require('body-parser')
 //Initialize express app
 const app = express();
 
-const redis = require('redis');//Configure redis client
-
 const DEFAULT_EXPIRATION = 3600;
 
 const adressRoute = require('./routes/address');
