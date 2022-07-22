@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require('../db');
 
 const numberSchema = mongoose.Schema({
 	number: {
 		type: String,
-		required: true
+		required: true,
+		index: true,
 	},
 	connectTimeInSec: {
 		type: Number,
