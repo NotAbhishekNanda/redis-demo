@@ -10,8 +10,11 @@ async function getNumber(req, res, next) {
     console.log('Cache Miss');
 
     const number = req.query.number;
+    console.log(number);
+    console.log(number.replace(/ /g,"+"));
+    const resNumber = number.replace(/ /g,"+");
 
-    Number.find({ number: { $regex: number, $options: '$i' } })
+    Number.find({ number: resNumber })
       .then((data) => {
 		let filteredData = data;
 		if (filteredData.length !== 0) {
@@ -51,6 +54,7 @@ const cache = async (req, res, next) => {
 };
 
 router.get('/findNumberFromCache', cache, getNumber);
+
 router.get('/numbers', async (req, res) => {
   const numberList = await redisClient.get('numbers');
   if (numberList != null) {
@@ -72,7 +76,8 @@ router.get('/numbers', async (req, res) => {
 
 router.get('/findNumber', async (req, res) => {
   let searchField = req.query.number;
-  Number.find({ number: { $regex: searchField, $options: '$i' } }).then(
+  let resNumber = searchField.replace(/ /g,"+")
+  Number.find({ number: resNumber }).then(
     (data) => {
       let filteredData = data;
       if (filteredData.length !== 0) {
